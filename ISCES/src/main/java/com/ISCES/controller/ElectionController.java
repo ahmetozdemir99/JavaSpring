@@ -1,4 +1,7 @@
 package com.ISCES.controller;
 
-public class ElectionController {
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class ElectionController { // it's for election initialization...
 }
