@@ -2,9 +2,11 @@ CREATE DATABASE  IF NOT EXISTS `isces_directory`;
 USE `isces_directory`;
 
 
+
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `student`;
 DROP TABLE IF EXISTS `candidate`;
+DROP TABLE IF EXISTS `admin`;
 --
 -- Table structure for ısces
 --
@@ -38,6 +40,14 @@ CREATE TABLE `candidate` (
   PRIMARY KEY (`candidate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `admin` (
+  `admin_id` BIGINT NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `department_id` BIGINT,
+  PRIMARY KEY (`admin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 
@@ -46,8 +56,8 @@ CREATE TABLE `candidate` (
 -- Inserting data for tables
 --
 
-INSERT INTO `user` 
-VALUES 
+INSERT INTO `user`
+VALUES
 ('ahmetozdemir1@std.iyte.edu.tr','test123','student'),
 ('ahmetozdemir2@std.iyte.edu.tr','test123','student'),
 ('ahmetozdemir3@std.iyte.edu.tr','test123','student'),
@@ -68,12 +78,17 @@ VALUES
 ('emrekaraduman3@std.iyte.edu.tr','test123','student'),
 ('emrekaraduman4@std.iyte.edu.tr','test123','student'),
 ('emrekaraduman5@std.iyte.edu.tr','test123','student'),
-('officer@iyte.edu.tr','test123','officer');
+('officer1@ofc.iyte.edu.tr','test123','officer'),
+('officer2@ofc.iyte.edu.tr','test123','officer'),
+('officer3@ofc.iyte.edu.tr','test123','officer'),
+('officer4@ofc.iyte.edu.tr','test123','officer'),
+('rector@rct.iyte.edu.tr','test123','rector');
 
 
 
-INSERT INTO `student` 
-VALUES 
+
+INSERT INTO `student`
+VALUES
 (270201051, 1, 'Ahmet', 'Özdemir', 2.73, 3, 0, 'ahmetozdemir1@std.iyte.edu.tr', false),
 (270201052, 1, 'Ahmet', 'Özdemir', 2.73, 3, 0, 'ahmetozdemir2@std.iyte.edu.tr', false),
 (270201053, 1, 'Ahmet', 'Özdemir', 2.73, 3, 0, 'ahmetozdemir3@std.iyte.edu.tr', false),
@@ -97,6 +112,14 @@ VALUES
 
 
 
+
+INSERT INTO `admin`
+VALUES
+(1,'officer1firstname','officer1lastname','officer1@ofc.iyte.edu.tr',1),
+(2,'officer2firstname','officer2lastname','officer2@ofc.iyte.edu.tr',2),
+(3,'officer3firstname','officer3lastname','officer3@ofc.iyte.edu.tr',3),
+(4,'officer4firstname','officer4lastname','officer4@ofc.iyte.edu.tr',4),
+(5,'rectorfirstname','rectorlastname','rector@rct.iyte.edu.tr',null);
 
 
 
