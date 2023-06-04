@@ -53,8 +53,9 @@ CREATE TABLE `admin` (
 
 CREATE TABLE `election` (
   `election_id` BIGINT NOT NULL,
-  `start_date` DATE NOT NULL,
-  `is_completed` DATE NOT NULL,
+  `start_date` DATETIME NOT NULL,
+  `end_date` DATETIME NOT NULL,
+  `is_finished` TINYINT,
   PRIMARY KEY (`election_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
