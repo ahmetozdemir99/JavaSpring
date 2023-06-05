@@ -95,7 +95,7 @@ public class UserController { // Bütün return typeler değişebilir . Response
 
 
     @GetMapping("/isInElectionProcess") // checks whether in election or not
-    public Boolean checkElectionInitialization(){
+    public boolean checkElectionInitialization(){
         return electionService.isThereStartedElection();
     }
 
