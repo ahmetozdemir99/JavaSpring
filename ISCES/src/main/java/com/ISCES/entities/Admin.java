@@ -30,5 +30,5 @@ public class Admin   {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="department_id")
     private Department department; // it's null for rector.
-    
+
 }
