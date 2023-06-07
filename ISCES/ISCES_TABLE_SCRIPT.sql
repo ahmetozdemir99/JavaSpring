@@ -44,6 +44,7 @@ CREATE TABLE `candidate` (
   `candidate_id` BIGINT NOT NULL,
   `votes` BIGINT NOT NULL,
   `student_number` BIGINT NOT NULL,
+  `election_id` BIGINT NOT NULL,
   PRIMARY KEY (`candidate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -85,6 +86,7 @@ CREATE TABLE `department` (
 CREATE TABLE `delegate` (
   `delegate_id` BIGINT NOT NULL,
   `candidate_id` BIGINT NOT NULL,
+  `is_confirmed` TINYINT,
   PRIMARY KEY (`delegate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
