@@ -8,6 +8,7 @@ import com.ISCES.response.LoginResponse;
 import com.ISCES.response.isInEletionProcessResponse;
 import com.ISCES.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -166,6 +167,16 @@ public class UserController { // Bütün return typeler değişebilir . Response
     @GetMapping("/tiedDelegates")
     public List<Delegate> getTiedDelegates(){
         return delegateService.findByIsConfirmed(null);// candidates that are not confirmed yet.
+    }
+
+    @GetMapping("/isInCandidacyProcess")
+    public boolean checkCandidacyProcess(){
+        LocalDateTime now = LocalDateTime.now();
+        Election election = electionService.findByIsFinished(false); // not finished election
+        if(election!= null){
+            return now.isBefore(election.getStartDate());
+        }
+       return false; // election is not setted by rector
     }
 
 

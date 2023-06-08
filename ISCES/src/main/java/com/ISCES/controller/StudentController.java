@@ -114,10 +114,13 @@ public class StudentController { // Bütün return typeler değişebilir . Respo
                                                                   @RequestParam("files") MultipartFile[] files) throws Exception {
         CandidacyRequest request = new CandidacyRequest(studentNumber,files);
         ApplyCandidacyResponse response = applyCandidacyService.uploadFile(request);
+        System.out.println(request.getStudentNumber());
+
         try {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("hata var");;
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }

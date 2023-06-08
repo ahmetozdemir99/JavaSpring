@@ -34,8 +34,8 @@ public class ApplyCandidacyService {
 
     @Transactional
     public ApplyCandidacyResponse uploadFile(CandidacyRequest request) throws Exception {
-
         Student studentEntity = studentRepo.findByStudentNumber(request.getStudentNumber());
+
         if (studentEntity == null) {
             throw new Exception("Student not found!");
         }
@@ -45,6 +45,7 @@ public class ApplyCandidacyService {
         folderRepo.save(uploadedFolder);
 
         Student appliedStudent = studentEntity;
+        System.out.println(appliedStudent.getStudentNumber());
 
         List<File> uploadedFiles = new ArrayList<>();
 
@@ -77,6 +78,7 @@ public class ApplyCandidacyService {
         }
         uploadedFolder.setFiles(uploadedFiles);
         uploadedFolder.setStudent(appliedStudent);
+        uploadedFolder.setFolderDirectory(uploadDir);
         folderRepo.save(uploadedFolder);
 
         ApplyCandidacyResponse response = ApplyCandidacyResponse.builder()

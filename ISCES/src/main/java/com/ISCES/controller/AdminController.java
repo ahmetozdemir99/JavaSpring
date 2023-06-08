@@ -6,6 +6,7 @@ import com.ISCES.service.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
@@ -35,9 +36,10 @@ public class AdminController {// Bütün return typeler değişebilir . Response
     private EmailService emailService;
     private Email2Service email2Service;
     private FolderService folderService;
+    private DownloadService downloadService;
 
 
-    public AdminController(FolderService folderService,Email2Service email2Service, EmailService emailService, DelegateService delegateService, CandidateService candidateService, UserService userService, StudentService studentService, AdminService adminService,ElectionService electionService) {
+    public AdminController(DownloadService downloadService,FolderService folderService,Email2Service email2Service, EmailService emailService, DelegateService delegateService, CandidateService candidateService, UserService userService, StudentService studentService, AdminService adminService,ElectionService electionService) {
         this.emailService = emailService;
         this.candidateService = candidateService;
         this.userService = userService;
@@ -47,6 +49,7 @@ public class AdminController {// Bütün return typeler değişebilir . Response
         this.delegateService = delegateService;
         this.email2Service = email2Service;
         this.folderService = folderService;
+        this.downloadService = downloadService;
     }
 
 
@@ -65,6 +68,7 @@ public class AdminController {// Bütün return typeler değişebilir . Response
     }
 
 
+
                                                         // departmentId is departmentİd of officer and unevaluatedStudents
     @GetMapping("/showRejectedStudents/{departmentId}") // if we need this for officer, we should this implement again...!!!
     public List<Student> getRejectedStudents(@PathVariable  Long departmentId){
@@ -74,7 +78,8 @@ public class AdminController {// Bütün return typeler değişebilir . Response
 
 
 
-    // GET MAPPING DEĞİŞECEK -> PostMapping
+
+
     @GetMapping("/confirmStudent/{studentNumber}") // it returns candidate because application is confirmed. Student is candidate right now.
     public Candidate confirmStudent(@PathVariable Long studentNumber){
         Student tempStudent = studentService.findByStudentNumber(studentNumber);
@@ -94,7 +99,7 @@ public class AdminController {// Bütün return typeler değişebilir . Response
         return tempCandidate;
     }
 
-    // GET MAPPING DEĞİŞECEK -> PutMapping
+
     @GetMapping("/rejectStudent/{studentNumber}") //  it returns student . If applications is not approved by officer , student is still student not candidate!!
     public Student rejectStudent(@PathVariable Long studentNumber){// candidacy of candidate is disapproved.
         if(studentService.findByStudentNumber(studentNumber).getIsAppliedForCandidacy() &&
@@ -105,6 +110,7 @@ public class AdminController {// Bütün return typeler değişebilir . Response
        // emailService.sendEmail(studentService.findByStudentNumber(studentNumber).getUser().getEmail(),false); //  sends email for rejected students
         return null;
     }
+
 
 
 
@@ -154,9 +160,11 @@ public class AdminController {// Bütün return typeler değişebilir . Response
     }
 
 
+
     @GetMapping("/electionDate")
     public Election getElectionDate(){return electionService.findByIsFinished(false);
     }
+
 
 
     @GetMapping("/concludeTie/{delegateId}") // select a candidate to make him confirmed delegate by delegate id.
@@ -172,6 +180,7 @@ public class AdminController {// Bütün return typeler değişebilir . Response
         }
     }
 
+
     @GetMapping("/finishElection")
     public Election finishElection(){
         Election election = electionService.getAllElections().get(electionService.getAllElections().size() - 1);
@@ -180,32 +189,21 @@ public class AdminController {// Bütün return typeler değişebilir . Response
             electionService.save(election); // save election to database
         }
         // buraya de electionın bittiğinde userlara sonuçlara bakabileceğini söyleyen bir mail yollamamız lazım !!!!!!!!!!!!
+        for(User user: userService.getAllUsers()){
+            if(user.getRole().equals("representative") || user.getRole().equals("candidate")){
+                user.setRole("student"); //  all representatives and students role has been changed.
+                userService.save(user); // users saved
+            }
+        }
         return election; // returns finished election.
     }
 
 
 
-
-    // upload documentsle database e yüklenecek ordan da officer studentnumberla çekecek.
-     @GetMapping("/fileDownload/{studentNumber}/{filePath}") // eklemeler yapılacak uploadEtmemiz lazım önce betüle sor nasıl edildiğini!!!!!!!!!!!!
-     public Folder downloadDocuments(@PathVariable Long studentNumber, @PathVariable String downloadPath) {
-         Folder folder = folderService.findByStudent_StudentNumber(studentNumber);
-         List<com.ISCES.entities.File> files = folder.getFiles();
-         for (File file : files) {
-             try {
-                 FileInputStream fis = new FileInputStream(file.getFilePath());
-                 FileOutputStream fos = new FileOutputStream(downloadPath);
-                 byte[] buffer = new byte[1024];
-                 int length;
-                 while ((length = fis.read(buffer)) > 0) {
-                     fos.write(buffer, 0, length);
-                 }
-                 fos.close();
-                 fis.close();
-             } catch (IOException e) {
-                 System.out.println("downnload failed message:  " + e.getMessage());
-             }
-         }
-        return folder;
+    @GetMapping("/downloadStudentFiles/{studentNumber}")
+    public ResponseEntity<InputStreamResource> downloadStudentFolders(@PathVariable Long studentNumber) throws IOException, IOException {
+        return downloadService.downloadStudentFolders(studentNumber);
     }
+
+
 }
