@@ -45,7 +45,6 @@ public class ApplyCandidacyService {
         folderRepo.save(uploadedFolder);
 
         Student appliedStudent = studentEntity;
-        System.out.println(appliedStudent.getStudentNumber());
 
         List<File> uploadedFiles = new ArrayList<>();
 

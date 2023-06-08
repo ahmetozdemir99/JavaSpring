@@ -19,6 +19,6 @@ public interface CandidateRepo extends JpaRepository<Candidate,Long> {
 
     List<Candidate> findByElection_ElectionIdAndStudent_Department_DepartmentId(Long electionId,Long departmentId);
 
-
+    List<Candidate> findByElection_ElectionId(Long electionId);
 
 }

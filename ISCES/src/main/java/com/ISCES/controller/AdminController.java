@@ -95,7 +95,7 @@ public class AdminController {// Bütün return typeler değişebilir . Response
             Candidate savedCandidate = candidateService.save(tempCandidate);
             return candidateService.save(tempCandidate); // it returns the candidate who is approved by officer.
         }
-       // emailService.sendEmail(studentService.findByStudentNumber(studentNumber).getUser().getEmail(),true); //  sends email for confirmed students.
+       emailService.sendEmail(studentService.findByStudentNumber(studentNumber).getUser().getEmail(),true); //  sends email for confirmed students.
         return tempCandidate;
     }
 
@@ -107,7 +107,7 @@ public class AdminController {// Bütün return typeler değişebilir . Response
             studentService.findByStudentNumber(studentNumber).setIsAppliedForCandidacy(null); // isAppliedCandidacy of student is changed to null
             return studentService.save(studentService.findByStudentNumber(studentNumber));// It returns and saves the student who is rejected by officer.
         }
-       // emailService.sendEmail(studentService.findByStudentNumber(studentNumber).getUser().getEmail(),false); //  sends email for rejected students
+       emailService.sendEmail(studentService.findByStudentNumber(studentNumber).getUser().getEmail(),false); //  sends email for rejected students
         return null;
     }
 
@@ -139,14 +139,15 @@ public class AdminController {// Bütün return typeler değişebilir . Response
                     if(student.getIsAppliedForCandidacy()) { // changed to false for all students
                         student.setIsAppliedForCandidacy(false);
                     }
-                    if (student.getUser().getRole().equals("candidate")) { //  changed false for  next year election
+                    if (student.getUser().getRole().equals("candidate") || student.getUser().getRole().equals("representative")) { //  changed false for  next year election
                         student.getUser().setRole("student");
                     }
+
                 }
                 try {
                     electionService.save(tempElection);
                     for(Student student: studentService.getAllStudents()){ //  sends all students election start date and end date.
-                        //email2Service.sendEmail(student.getUser().getEmail(),electionRequest.getStartDate(),electionRequest.getEndDate());
+                        email2Service.sendEmail(student.getUser().getEmail(),electionRequest.getStartDate(),electionRequest.getEndDate());
                     }
                     return new ResponseEntity<>(new ElectionRequest(electionRequest.getStartDate(), electionRequest.getEndDate()), HttpStatus.OK);
                 } catch (Exception e) {
@@ -182,11 +183,14 @@ public class AdminController {// Bütün return typeler değişebilir . Response
 
 
     @GetMapping("/finishElection")
-    public Election finishElection(){
+    public Election finishElection(){ //  cancels election
         Election election = electionService.getAllElections().get(electionService.getAllElections().size() - 1);
-        if(!election.isFinished()){ // if isFinished of last election is false  -> if election hasn't ended yet.
-            election.setFinished(true); // set election as finisehd
-            electionService.save(election); // save election to database
+
+        List<Candidate> candidateList = candidateService.findByElectionId(election.getElectionId());
+        if(candidateList != null){
+            for(Candidate candidate : candidateList){
+                candidateService.deleteCandidate(candidate);
+            }
         }
         // buraya de electionın bittiğinde userlara sonuçlara bakabileceğini söyleyen bir mail yollamamız lazım !!!!!!!!!!!!
         for(User user: userService.getAllUsers()){
@@ -194,6 +198,9 @@ public class AdminController {// Bütün return typeler değişebilir . Response
                 user.setRole("student"); //  all representatives and students role has been changed.
                 userService.save(user); // users saved
             }
+        }
+        if(!election.isFinished()){ // if isFinished of last election is false  -> if election hasn't ended yet.
+            electionService.delete(election); // save election to database
         }
         return election; // returns finished election.
     }

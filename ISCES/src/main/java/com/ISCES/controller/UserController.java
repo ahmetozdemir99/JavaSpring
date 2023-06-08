@@ -92,7 +92,6 @@ public class UserController { // Bütün return typeler değişebilir . Response
                         return new ResponseEntity<>(new LoginResponse(200, controller, rector,isElectionStarted), HttpStatus.OK);
                     }
             }
-
             else {
                 // Http status 4**
                 return new ResponseEntity<>(new LoginResponse(400, "Invalid Requests"), HttpStatus.BAD_REQUEST);
@@ -121,21 +120,18 @@ public class UserController { // Bütün return typeler değişebilir . Response
                         Long max = Long.valueOf(0);
                         for (Candidate candidate : candidateList) {
                             voteList.add(candidate.getVotes().intValue());
-                            if (candidate.getVotes() > max) {
+                            if (candidate.getVotes() >= max) {
                                 max = candidate.getVotes();
                             }
                         }
-
                         int maxController = Collections.max(voteList);
                         List<Candidate> candidate = candidateService.findByVotes(Long.valueOf(maxController),department.getDepartmentId());
                         Long delegateId = Long.valueOf(delegateService.getAllDelegates().size() + 1);
                         boolean istiedaa = Collections.frequency(voteList,maxController) >= 2;
                         if(!istiedaa){ //  there is no tie.
                             User user = candidate.get(0).getStudent().getUser();
-                           user.setRole("representative"); // role is setted as representative
-                            if(user.getRole().equals("candidate")){
-                                user.setRole("student");
-                            }
+                            user.setRole("representative");
+                            userService.save(user);// role is setted as representative
                             //  candidate ,user and student  saved the changes.
                             Delegate delegate = new Delegate(delegateId, candidate.get(0),true); // new delegate has been created.
                             delegateService.save(delegate);
@@ -176,7 +172,7 @@ public class UserController { // Bütün return typeler değişebilir . Response
         if(election!= null){
             return now.isBefore(election.getStartDate());
         }
-       return false; // election is not setted by rector
+       return false; // election is not set by rector
     }
 
 

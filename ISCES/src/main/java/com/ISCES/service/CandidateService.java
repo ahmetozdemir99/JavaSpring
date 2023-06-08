@@ -86,6 +86,11 @@ public class CandidateService {
         return candidateRepo.findByElection_ElectionIdAndStudent_Department_DepartmentId(lastElectionId,departmentId);
     }
 
+    @Transactional
+    public List<Candidate> findByElectionId(Long electionId){
+        return candidateRepo.findByElection_ElectionId(electionId);
+    }
+
 
 
 }
