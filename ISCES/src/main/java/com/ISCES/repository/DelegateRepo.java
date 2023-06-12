@@ -13,5 +13,6 @@ public interface DelegateRepo extends JpaRepository<Delegate,Long> {
 
     List<Delegate> findByCandidate_Student_Department_DepartmentIdAndIsConfirmed(Long departmentId, Boolean isConfirmed);
 
+    Delegate findByCandidate_Student_User_Email(String email);
 
 }

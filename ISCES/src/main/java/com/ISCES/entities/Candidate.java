@@ -24,12 +24,13 @@ public class Candidate{
     private Long votes;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "student_number")
     private Student student;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name= "election_id")
     private Election election;
+
 
 }

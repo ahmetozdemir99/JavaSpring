@@ -63,4 +63,9 @@ public class DelegateService {
     public List<Delegate> getAllDelegates(){
         return delegateRepo.findAll();
     }
+
+    @Transactional
+    public Delegate findByCandidate_Student_User_Email(String email){
+        return delegateRepo.findByCandidate_Student_User_Email(email);
+    }
 }

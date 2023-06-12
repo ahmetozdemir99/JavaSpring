@@ -91,6 +91,11 @@ public class UserController { // Bütün return typeler değişebilir . Response
                         Admin rector = adminService.findByUser_Email(email);
                         return new ResponseEntity<>(new LoginResponse(200, controller, rector,isElectionStarted), HttpStatus.OK);
                     }
+                    else if(user.getRole().equals("representative")){
+                        Student student = studentService.findByUser_Email(email);
+                        return new ResponseEntity<>(new LoginResponse(200, controller, student,isElectionStarted), HttpStatus.OK);
+                    }
+
             }
             else {
                 // Http status 4**
@@ -140,12 +145,17 @@ public class UserController { // Bütün return typeler değişebilir . Response
                         else{
                             for(Candidate candidateTied: candidate){
                                     Delegate delegate = new Delegate(delegateId,candidateTied,null);
+                                    delegate.getCandidate().getStudent().getUser().setRole("representative");
                                     delegateService.save(delegate);
                                     delegateId++;
                             }
                         }
-                    }
 
+
+                    }
+                }
+                for(Student student: studentService.getAllStudents()){
+                    student.setVoted(false);
                 }
                 Election tempElection = electionService.findByIsFinished(false);
                 tempElection.setFinished(true);

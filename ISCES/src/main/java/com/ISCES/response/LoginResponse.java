@@ -18,6 +18,7 @@ public class LoginResponse { // we can change it .
     private Admin admin;
     private String role;
     private boolean isElectionStarted;
+    private Delegate delegate;
 
     public LoginResponse(int status, String message,Student student,boolean isElectionStarted) { //  response for student's login.
         this.status = status;
@@ -36,6 +37,17 @@ public class LoginResponse { // we can change it .
         this.isElectionStarted = isElectionStarted;
 
     }
+
+    public LoginResponse(int status, String message,Student delegate,Boolean isElectionStarted) { // response for candidate's login.
+        this.status = status;
+        this.message = message;
+        this.student = delegate;
+        this.role = "representative";
+        this.isElectionStarted = isElectionStarted;
+
+    }
+
+
 
     public LoginResponse(int status, String message, Admin admin,Boolean isElectionStarted) { // response for officer's login.
         this.status = status;
