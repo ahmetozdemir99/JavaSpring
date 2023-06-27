@@ -18,6 +18,8 @@ DROP TABLE IF EXISTS `messages`;
 
 CREATE TABLE `user` (
   `user_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
   `user_name` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -68,7 +70,6 @@ CREATE TABLE `comment` (
 
 CREATE TABLE `Messages`(
 	`message_id` BIGINT NOT NULL AUTO_INCREMENT,
-
 	`sender_id` BIGINT NOT NULL,
 	`receiver_id` BIGINT NOT NULL,
     `message_text` VARCHAR(150) NOT NULL,
@@ -85,12 +86,12 @@ CREATE TABLE `Messages`(
 
 INSERT INTO `user`
 VALUES
-(1,'user1','test123','email1','user'),
-(2,'user2','test123','email2','user'),
-(3,'user3','test123','email3','user'),
-(4,'user4','test123','email4','user'),
-(5,'user5','test123','email5','user'),
-(6,'user6','test123','email6','admin');
+(1,'firstname1','lastname1','user1','test123','email1','user'),
+(2,'firstname2','lastname2','user2','test123','email2','user'),
+(3,'firstname3','lastname3','user3','test123','email3','user'),
+(4,'firstname4','lastname4','user4','test123','email4','user'),
+(5,'firstname5','lastname5','user5','test123','email5','user'),
+(6,'firstname6','lastname6','user6','test123','email6','admin');
 
 
 

@@ -31,9 +31,7 @@ public class NotificationService {
 
     public void deleteAllNotificationsOfAnUser(Long userId){
         if(notificationRepo.findByUser_Id(userId) != null){
-            for(Notification notification: notificationRepo.findByUser_Id(userId)){
-                notificationRepo.delete(notification);
-            }
+            notificationRepo.deleteAll(notificationRepo.findByUser_Id(userId));
         }
     }
 
