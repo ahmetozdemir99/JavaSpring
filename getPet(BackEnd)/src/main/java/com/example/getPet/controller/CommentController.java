@@ -60,6 +60,7 @@ public class CommentController {
                 commentResponse.setUserName(comment.getUser().getUserName());
                 commentResponse.setText(comment.getText());
                 commentResponse.setUserId(comment.getUser().getId());
+                commentResponse.setCreationTime(comment.getCreationTime());
                 responsesList.add(commentResponse);
             }
         }
