@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepo extends JpaRepository<Post,Long> {
-  //  Post findByUser_Id(Long id);
+
+
 
    // List<Post> findByUser_Id(Long id); // it's for user's profile
 

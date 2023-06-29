@@ -30,7 +30,6 @@ public class SystemAccessController {
         }
         // If not understandable error is thrown which is probably server error.
         catch (Exception err) {
-            System.out.println(err.getMessage());
             return new ResponseEntity<>("Not unique data! mail or sth in SYSTEM!", HttpStatus.BAD_REQUEST);
         }
     }

@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,14 +73,22 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentResponse> createComment(@RequestBody CommentCreateRequest commentCreateRequest){ //  after comment is created by user. Notification will be sended to user who is the owner of the post.
         Comment comment = new Comment();
+        LocalDateTime now = LocalDateTime.now();
         comment.setPost(postService.getPostById(commentCreateRequest.getPostId()));
         comment.setText(commentCreateRequest.getText());
         comment.setUser(userService.getUserById(commentCreateRequest.getUserId()));
-        Notification notification = new Notification();
-        notification.setUser(userService.getUserById(commentCreateRequest.getUserId()));
-        notification.setMessage(userService.getUserById(commentCreateRequest.getUserId()).getUserName()+" commented on your post");
-        notificationService.save(notification);
+        comment.setCreationTime(now);
         commentService.save(comment);
+
+        if(postService.getPostById(commentCreateRequest.getPostId()).getUser().getId() != commentCreateRequest.getUserId()){ // if user doesn't comment on his post notification will be created.
+            Notification notification = new Notification();
+            notification.setPost(postService.getPostById(commentCreateRequest.getPostId()));
+            notification.setMessage(userService.getUserById(commentCreateRequest.getUserId()).getUserName()+" commented on your post.");
+            notification.setUser(userService.getUserById(postService.getPostById(commentCreateRequest.getPostId()).getUser().getId()));
+            notification.setCreationTime(now); // creation time
+            notificationService.save(notification);
+        }
+
         try{
             return new ResponseEntity<>(new CommentResponse(comment), HttpStatus.OK);
         }catch (Exception e){

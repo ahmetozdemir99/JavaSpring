@@ -18,7 +18,7 @@ import java.util.Date;
 @Table(name = "post")
 @Data
 public class Post {
-// These are for every type of posts.
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,12 +36,12 @@ public class Post {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
- //   @Temporal(TemporalType.TIMESTAMP)
- //   LocalDateTime creationDate;
-//
-  //  @Lob
-  //  @Column(columnDefinition = "MEDIUMBLOB")
-  //  private String image;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "creation_time")
+    private LocalDateTime creationTime;
+
+    @Column(name = "photo_path")
+    private String photoPath;
 
     @Column(name="like_count")
     private Long likeCount;
@@ -58,7 +58,7 @@ public class Post {
     @Column(name="kind")
     private String kind;
 
-/////////////////////////////////////////////////////////////////////////////////////////
+
 
     //it's for takecare  //// json formatters will be added
 
@@ -69,16 +69,19 @@ public class Post {
     @Column(name ="end_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endDate;
+
     @Column(name="price")
     private Float takeCarePrice;
 
 
+    @Column(name= "special_needs")
+    private String specialNeeds;
 
 
 
 
     // Constructor for adoption posts.
-    public Post(Long id, String title, String content, User user, Long likeCount, String postType, String city, int age,String kind) {
+    public Post(Long id, String title, String content, User user, Long likeCount, String postType, String city, int age,String kind, LocalDateTime creationTime, String specialNeeds, String photoPath) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -89,12 +92,15 @@ public class Post {
         this.city = city;
         this.age = age;
         this.kind = kind;
+        this.creationTime = creationTime;
+        this.specialNeeds = specialNeeds;
+        this.photoPath = photoPath;
     }
 
 
     // Constructor for take care posts.
     public Post(Long id, String title, String content, User user, Long likeCount, String postType, String city, int age,String kind,
-                LocalDateTime startDate, LocalDateTime endDate, Float takeCarePrice) {
+                LocalDateTime startDate, LocalDateTime endDate, Float takeCarePrice, LocalDateTime creationTime, String specialNeeds,String photoPath) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -108,16 +114,22 @@ public class Post {
         this.startDate = startDate;
         this.endDate = endDate;
         this.takeCarePrice = takeCarePrice;
+        this.creationTime = creationTime;
+        this.specialNeeds = specialNeeds;
+        this.photoPath = photoPath;
     }
 
     // Constructor for question posts.
-    public Post(Long id, String title, String content, User user, Long likeCount, String postType) {
+    public Post(Long id, String title, String content, User user, Long likeCount, String postType, LocalDateTime creationTime, String photoPath) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.user = user;
         this.likeCount = likeCount;
         this.postType = postType;
+        this.creationTime = creationTime;
+        this.photoPath = photoPath;
+
     }
 
 

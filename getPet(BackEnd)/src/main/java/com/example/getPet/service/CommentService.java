@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,10 +67,11 @@ public class CommentService {
         commentToSave.setPost(post);
         commentToSave.setUser(user);
         commentToSave.setText(commentCreateRequest.getText());
+        commentToSave.setCreationTime(LocalDateTime.now());
         return commentToSave;
     }
 
-    public Comment updateOneCommentById(Long commentId, CommentUpdateRequest commentUpdateRequest) {
+    public Comment updateOneCommentById(Long commentId, CommentUpdateRequest commentUpdateRequest){
         Optional<Comment> comment = commentRepo.findById(commentId);
         if(comment.isPresent()) {
             Comment commentToUpdate = comment.get();

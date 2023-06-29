@@ -9,14 +9,17 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
 @Setter
 @Service
 public class MessageService {
-    private final MessageRepository messageRepository;
-    private final UserService userService;
+    private  MessageRepository messageRepository;
+    private  UserService userService;
     @Autowired
     public MessageService(MessageRepository messageRepository,UserService userService){
         this.messageRepository=messageRepository;
@@ -29,12 +32,14 @@ public class MessageService {
         List<Message> messages_sender_reciever= messageRepository.findBySenderAndReceiver(sender,receiver);
         List<Message> messages_reciever_sender= messageRepository.findBySenderAndReceiver(receiver,sender);
         messages_reciever_sender.addAll(messages_sender_reciever);
+        Collections.sort(messages_reciever_sender, Comparator.comparing(Message::getCreationTime)); //  all messages in conversation is sorted by creations date
         return messages_reciever_sender;
     }
 
 
     public Message sendMessage(MessageSendRequest messageSendRequest) {
-    //date burada eklenebilir
+        LocalDateTime now = LocalDateTime.now(); // message creation date
+
         User sender = userService.getUserById(messageSendRequest.getSenderId());
         User reciever = userService.getUserById(messageSendRequest.getRecieverId());
     //null ise error handling eklenebilir
@@ -42,6 +47,7 @@ public class MessageService {
         message.setSender(sender);
         message.setReceiver(reciever);
         message.setMessageText(messageSendRequest.getMessage());
+        message.setCreationTime(now);
         messageRepository.save(message);
 
         return message;

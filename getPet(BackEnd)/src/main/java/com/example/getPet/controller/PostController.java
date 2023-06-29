@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -34,34 +35,6 @@ public class PostController {
         return postService.getPostRepo().findAll();
     }
 
- //   @GetMapping("/adoptionPosts")
- //   public List<PostResponse> getAdoptionPosts(){ // it's for main page ordered by creation date.
- //       List<PostResponse> adoptionPostList = new ArrayList<PostResponse>();
- //       for(Post post: postService.getAdoptionPosts()){
- //           PostResponse postResponse = new PostResponse(post);
- //       }
- //       return adoptionPostList;
- //   }
-//
- //   @GetMapping("/takeCarePosts")
- //   public List<PostResponse> getTakeCarePosts(){ // it's for main page ordered by creation date.
- //       List<PostResponse> adoptionPostList = new ArrayList<PostResponse>();
- //       for(Post post: postService.getTakeCarePosts()){
- //           PostResponse postResponse = new PostResponse(post);
- //       }
- //       return adoptionPostList;
- //   }
-//
-//  @GetMapping("/allPosts/{userId}")
-//  public List<PostResponse> getAllPostsOfAnUser(Long userId){ // it's for users profile.
-//      return postService.getAllPostsAnUser(userId);
-//  }
-
-
-
-
-
-
 
 
 
@@ -72,6 +45,9 @@ public class PostController {
 //
  //   }
 //
+
+
+
         //   for creations  you can look at the creation requests for every posts in  the request package.
     @PostMapping("/createAdoption")
     public Post createAdoptionPost(@RequestBody AdoptionPostCreateRequest postCreateRequest) {
@@ -96,6 +72,7 @@ public class PostController {
 
 
 
+
     @GetMapping("/{postId}")
     public Post getPostById(@PathVariable Long postId) {
         return postService.getPostById(postId);
@@ -111,5 +88,15 @@ public class PostController {
     public void deletePostById(@PathVariable Long postId) {
         postService.deletePost(postId);
     }
+
+
+    @PostMapping("/uploadPhoto")
+    public String uploadPhoto(@RequestParam("postId") Long postId,
+                              @RequestParam("photo") MultipartFile photo) throws Exception {
+        return postService.uploadPhoto(postId,photo);
+    }
+
 }
+
+
 

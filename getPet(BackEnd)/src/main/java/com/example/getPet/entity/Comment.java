@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -42,9 +43,11 @@ public class Comment {
     @Column(columnDefinition = "text")
     private String text;
 
-//
-//    @Temporal(TemporalType.TIMESTAMP)
-//    Date createDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "creation_time")
+    private LocalDateTime creationTime;
+
+
 
 
     public Comment(Long commentId, Post post, User user, String text) { // constructor for comments of a post

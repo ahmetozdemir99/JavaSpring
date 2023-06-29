@@ -3,6 +3,8 @@ package com.example.getPet.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,5 +30,10 @@ public class Message {
     @Column(nullable = false,name = "message_text")
     private String messageText;
 
-    //for now there is no date feature, we can add later.
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "creation_time")
+    private LocalDateTime creationTime;
+
+
+
 }

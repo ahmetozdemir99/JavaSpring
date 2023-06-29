@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,27 +40,45 @@ public class LikeController {
 
     @PostMapping
     public ResponseEntity<LikeResponse> createLike(@RequestBody LikeRequest likeRequest){
-        LikeResponse likeResponse = new LikeResponse();
-        Post post = postService.getPostById(likeRequest.getPostId());
-        User user = userService.getUserById(likeRequest.getUserId());
-        User userNotified = post.getUser();
-        Like like = new Like();
-        like.setPost(post);
-        like.setUser(user);
-        Notification notification = new Notification();
-        notification.setUser(userNotified);
-        notification.setMessage(user.getUserName() + " liked your post.");
-        likeService.save(like);
-        notificationService.save(notification);
-        post.setLikeCount(post.getLikeCount() + 1);// increment likeCount of post.
-        try{
-            likeResponse.setId(like.getId());
-            likeResponse.setPostId(post.getId());
-            likeResponse.setUserId(user.getId());
-            return new ResponseEntity<>(likeResponse, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(new LikeResponse(), HttpStatus.BAD_REQUEST);
+        Like tempLike = likeService.findByUserIdAndPostId(likeRequest.getUserId(), likeRequest.getPostId());
+        if(tempLike != null){ // if user has already liked this post !!
+            try{
+                return new ResponseEntity<>(HttpStatus.OK);
+            }catch (Exception e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }
+        else{
+            LikeResponse likeResponse = new LikeResponse();
+            LocalDateTime now = LocalDateTime.now();
+            Post post = postService.getPostById(likeRequest.getPostId());
+            User user = userService.getUserById(likeRequest.getUserId());
+            Like like = new Like();
+            like.setPost(post);
+            like.setUser(user);
+            likeService.save(like);
+            post.setLikeCount(post.getLikeCount() + 1);// increment likeCount of post.
+
+            if(post.getUser().getId() != user.getId()){ // if user doesn't like him post notification will be created.
+                Notification notification = new Notification();
+                notification.setPost(post);
+                notification.setMessage(user.getUserName() + " liked your post.");
+                notification.setUser(userService.getUserById(post.getUser().getId()));
+                notification.setCreationTime(now);
+                notificationService.save(notification);
+            }
+
+            try{
+                likeResponse.setId(like.getId());
+                likeResponse.setPostId(post.getId());
+                likeResponse.setUserId(user.getId());
+                return new ResponseEntity<>(likeResponse, HttpStatus.OK);
+            }catch (Exception e){
+                return new ResponseEntity<>(new LikeResponse(), HttpStatus.BAD_REQUEST);
+            }
+
+        }
+
     }
 
 

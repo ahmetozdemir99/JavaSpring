@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name="notification")
 @Data
@@ -21,12 +23,19 @@ public class Notification {
     @Column(name = "message")
     private String message;
 
-  // @Column(name="is_chechked")
-  // private boolean isChecked;  // it's zero if user checked the notification.
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "creation_time")
+    private LocalDateTime creationTime;
 
 }
