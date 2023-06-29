@@ -122,4 +122,7 @@ public class CommentController {
     public void deleteCommentById(@PathVariable Long commentId){
         commentService.deleteCommentById(commentId);
     }
+
+
+
 }

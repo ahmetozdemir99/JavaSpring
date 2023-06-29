@@ -20,5 +20,6 @@ public class TakeCarePostCreateRequest {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private float price;
+    private String specialNeeds;
 
 }

@@ -86,7 +86,6 @@ public class Post {
         this.title = title;
         this.content = content;
         this.user = user;
-       // this.image = image;
         this.likeCount = likeCount;
         this.postType = postType;
         this.city = city;
@@ -105,7 +104,6 @@ public class Post {
         this.title = title;
         this.content = content;
         this.user = user;
-       // this.image = image;
         this.likeCount = likeCount;
         this.postType = postType;
         this.city = city;

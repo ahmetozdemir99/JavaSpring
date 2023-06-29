@@ -67,6 +67,7 @@ public class PostService {
         toSave.setAge(postCreateRequest.getAge());
         toSave.setKind(postCreateRequest.getKind());
         toSave.setCreationTime(now);
+        toSave.setSpecialNeeds(postCreateRequest.getSpecialNeeds());
         return postRepo.save(toSave);
     }
 
@@ -108,6 +109,7 @@ public class PostService {
         toSave.setEndDate(postCreateRequest.getEndDate());
         toSave.setTakeCarePrice(postCreateRequest.getPrice());
         toSave.setCreationTime(now);
+        toSave.setSpecialNeeds(postCreateRequest.getSpecialNeeds());
         return postRepo.save(toSave);
     }
 

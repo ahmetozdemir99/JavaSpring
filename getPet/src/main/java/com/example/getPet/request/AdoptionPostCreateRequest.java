@@ -15,5 +15,6 @@ public class AdoptionPostCreateRequest {
       private String city;
       private Integer age;
       private String kind;
+      private String specialNeeds;
 
 }
