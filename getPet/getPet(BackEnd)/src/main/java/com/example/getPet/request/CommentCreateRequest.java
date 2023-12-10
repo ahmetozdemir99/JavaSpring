@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @Data
 public class CommentCreateRequest {
+
     private Long userId;
     private Long postId;
     private String text;
